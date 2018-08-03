@@ -187,13 +187,16 @@ func pullImage(ctx context.Context, store storage.Store, imageName string, optio
 	registryPath := sysregistries.RegistriesConfPath(sc)
 	searchRegistries, err := getRegistries(sc)
 	if err != nil {
+		logrus.Debugf("getRegistries Error for image [%s] [%v] [%v]", imageName, err, reflect.TypeOf(err))
 		return nil, err
 	}
 	hasRegistryInName, err := hasRegistry(imageName)
 	if err != nil {
+		logrus.Debugf("hasRegistry Error for image [%s] [%v] [%v]", imageName, err, reflect.TypeOf(err))
 		return nil, err
 	}
 	if !hasRegistryInName && len(searchRegistries) == 0 {
+		logrus.Debugf("No registry in name for image [%s] [%v] [%v]", imageName, err, reflect.TypeOf(err))
 		return nil, errors.Errorf("image name provided is a short name and no search registries are defined in %s.", registryPath)
 	}
 	return nil, NewGenericPullError(fmt.Sprintf("unable to find image in the registries defined in %q", registryPath))
